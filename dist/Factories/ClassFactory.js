@@ -46,7 +46,6 @@ var ClassFactory;
     function getDependence(classSymbol, checker) {
         var results = new Set();
         filterNodes(classSymbol.valueDeclaration.getSourceFile().getChildren());
-        console.log('allNodes done');
         return Array.from(results);
         function filterNodes(nodes) {
             nodes.forEach(function (node) {
@@ -54,7 +53,6 @@ var ClassFactory;
                     var currentNode = node;
                     var sym = checker.getSymbolAtLocation(currentNode.expression);
                     if (sym && sym.type) {
-                        console.log("test:" + node.getText() + "   expression:" + sym.getName() + "\n                        " + sym.type.getSymbol().name);
                         var className = getClassName(sym.type.getSymbol());
                         if (className === '__object') {
                             className = sym.getName();
@@ -62,7 +60,6 @@ var ClassFactory;
                         results.add(className);
                     }
                     else {
-                        console.log('no symbol...');
                     }
                 }
                 filterNodes(node.getChildren());

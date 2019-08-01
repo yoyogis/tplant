@@ -74,7 +74,6 @@ export namespace ClassFactory {
   export function getDependence(classSymbol: ts.Symbol, checker: ts.TypeChecker): string[] {
     const results: Set<string> = new Set();
     filterNodes(classSymbol.valueDeclaration.getSourceFile().getChildren());
-    console.log('allNodes done');
 
     return Array.from(results);
     function filterNodes(nodes: ts.Node[]): void {
@@ -84,15 +83,15 @@ export namespace ClassFactory {
           // tslint:disable-next-line: no-any
           const sym: any = checker.getSymbolAtLocation(currentNode.expression);
           if (sym && sym.type) {
-            console.log(`test:${node.getText()}   expression:${sym.getName()}
-                        ${sym.type.getSymbol().name}`);
+            // console.log(`test:${node.getText()}   expression:${sym.getName()}
+            //             ${sym.type.getSymbol().name}`);
             let className: string = getClassName(sym.type.getSymbol());
             if (className === '__object') {
                 className = sym.getName();
             }
             results.add(className);
           } else {
-            console.log('no symbol...');
+            // console.log('no symbol...');
           }
         }
         filterNodes(node.getChildren());
