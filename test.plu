@@ -1,0 +1,63 @@
+@startuml
+class entity.User {
+    +test: string
+    +name: string
+    +age: number
+}
+interface entity.MenuItem {
+    +name: string
+    +path: string
+    +isDefault: boolean
+}
+class store.HeaderStore {
+    +menus: MenuItem[]
+    +selectedMenuItem: MenuItem | null
+    +temp: MenuItem | null
+    +selectMenuItem(menuItem: MenuItem): void
+    +requestMenus(): void
+}
+class store.Sub1 {
+    +name: string
+}
+class store.Sub2
+class store.Sub11 {
+    +name: string
+}
+class store.UserStore {
+    +list: User[]
+    +selected: User
+    +getSelectedUser(): User
+    +getSelectedUserName(): number
+    +getUsers(): User[]
+    +addUser(user: User): void
+    +rename(name: string): void
+    +selectUser(user: User): void
+}
+class HeaderNav extends Vue {
+    +menuItems: MenuItem[]
+    +subName: string
+    +selectedMenuItem: MenuItem | null
+    +selectMenuItem(menuItem: MenuItem): void
+}
+HeaderNav --> store.HeaderStore
+HeaderNav --> store.Sub1
+HeaderNav --> subModule
+class User extends Vue {
+    +data: {}
+}
+class HelloWorld extends Vue {
+    -msg: string
+    +outsideState: User[]
+    +selectedUser: User
+    +selectedUserAge: number
+    +click(): void
+    +rename(): void
+    +select(user: User): void
+}
+HelloWorld --> store.UserStore
+HelloWorld --> store.HeaderStore
+class UserDetail extends Vue {
+    +user: User
+}
+UserDetail --> store.UserStore
+@enduml

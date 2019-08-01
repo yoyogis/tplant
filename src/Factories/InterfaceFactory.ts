@@ -4,7 +4,7 @@ import { ComponentFactory } from './ComponentFactory';
 
 export namespace InterfaceFactory {
     export function create(interfaceSymbol: ts.Symbol, checker: ts.TypeChecker): Interface {
-        const result: Interface = new Interface(interfaceSymbol.getName());
+        const result: Interface = new Interface(getClassName(interfaceSymbol));
 
         const declaration: ts.InterfaceDeclaration[] | undefined = <ts.InterfaceDeclaration[] | undefined>interfaceSymbol.getDeclarations();
 
@@ -26,4 +26,20 @@ export namespace InterfaceFactory {
 
         return result;
     }
+
+    function getClassName(classSymbol: ts.Symbol):string{
+        let className: string = classSymbol.getName();
+        const s: any = classSymbol;
+        if (className === 'default') {
+          className = s.getDeclarations()[0].name.escapedText;
+        }
+        if(s.parent&&s.parent.valueDeclaration&&s.parent.valueDeclaration.path){
+            const m = s.parent.valueDeclaration.path.match(/\.([a-z]+)\.ts/);
+            if (m) {
+            className = m[1]+'.'+className;
+            }
+        }
+        
+        return className;
+      }
 }

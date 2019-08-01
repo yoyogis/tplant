@@ -41,7 +41,7 @@ G(<string>commander.input, {}, (err: Error | null, matches: string[]): void => {
     const tsConfigFile: string | undefined = findTsConfigFile(<string>commander.input, <string | undefined>commander.tsconfig);
 
     const plantUMLDocument: string = tplant.convertToPlant(
-        tplant.generateDocumentation(matches, getCompilerOptions(tsConfigFile)),
+        tplant.generateDocumentation(matches.filter(m => m.indexOf('node_modules') === -1), getCompilerOptions(tsConfigFile)),
         {
             compositions: <boolean>commander.compositions,
             onlyInterfaces: <boolean>commander.onlyInterfaces

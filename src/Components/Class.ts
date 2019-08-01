@@ -15,6 +15,7 @@ export class Class implements IComponentComposite {
     public extendsClass: string | undefined;
     public implementsInterfaces: string[] = [];
     public typeParameters: IComponentComposite[] = [];
+    public dependencies: string[] = [];
 
     constructor(name: string) {
         this.name = name;
@@ -49,6 +50,12 @@ export class Class implements IComponentComposite {
         });
         if (this.members.length > 0) {
             result.push('}');
+        }
+
+        if(this.dependencies.length > 0){
+            this.dependencies.forEach(d=>{
+                result.push(`${this.name} --> ${d}`);
+            })
         }
 
         return result.join(os.EOL);
