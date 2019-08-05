@@ -82,14 +82,27 @@ export namespace ClassFactory {
           const currentNode: ts.PropertyAccessExpression = <ts.PropertyAccessExpression>node;
           // tslint:disable-next-line: no-any
           const sym: any = checker.getSymbolAtLocation(currentNode.expression);
-          if (sym && sym.type) {
-            // console.log(`test:${node.getText()}   expression:${sym.getName()}
-            //             ${sym.type.getSymbol().name}`);
+          if (sym && sym.type && sym.type.getSymbol()&&['Array', 'Object', 'Number', 'String', 'string', 'Boolean', 'Function', 'Math', 'Console', 'HttpClient',
+          'ObjectConstructor', 'JSON', 'Document', 'NumberConstructor'].indexOf(sym.name)===-1) {
             let className: string = getClassName(sym.type.getSymbol());
             if (className === '__object') {
                 className = sym.getName();
             }
             results.add(className);
+          } else if (sym && sym.valueDeclaration && sym.valueDeclaration.type && sym.valueDeclaration.type.typeName) {
+            if (['Array', 'Object', 'Number', 'String', 'string', 'Boolean', 'Function', 'Math', 'Console', 'HttpClient',
+            'ObjectConstructor', 'JSON', 'Document', 'NumberConstructor'].indexOf(sym.valueDeclaration.type.typeName.text) === -1) {
+              const sym1: any = checker.getTypeAtLocation(sym.valueDeclaration.type.typeName);
+              if (sym1 && sym1.getSymbol()) {
+                let className: string = getClassName(sym1.getSymbol());
+                if (className === '__object') {
+                      className = sym.getName();
+                  }
+                results.add(className);
+
+              }
+            }
+
           } else {
             // console.log('no symbol...');
           }

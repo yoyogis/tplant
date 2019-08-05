@@ -52,12 +52,26 @@ var ClassFactory;
                 if (node.kind === typescript_1.default.SyntaxKind.PropertyAccessExpression) {
                     var currentNode = node;
                     var sym = checker.getSymbolAtLocation(currentNode.expression);
-                    if (sym && sym.type) {
+                    if (sym && sym.type && sym.type.getSymbol() && ['Array', 'Object', 'Number', 'String', 'string', 'Boolean', 'Function', 'Math', 'Console', 'HttpClient',
+                        'ObjectConstructor', 'JSON', 'Document', 'NumberConstructor'].indexOf(sym.name) === -1) {
                         var className = getClassName(sym.type.getSymbol());
                         if (className === '__object') {
                             className = sym.getName();
                         }
                         results.add(className);
+                    }
+                    else if (sym && sym.valueDeclaration && sym.valueDeclaration.type && sym.valueDeclaration.type.typeName) {
+                        if (['Array', 'Object', 'Number', 'String', 'string', 'Boolean', 'Function', 'Math', 'Console', 'HttpClient',
+                            'ObjectConstructor', 'JSON', 'Document', 'NumberConstructor'].indexOf(sym.valueDeclaration.type.typeName.text) === -1) {
+                            var sym1 = checker.getTypeAtLocation(sym.valueDeclaration.type.typeName);
+                            if (sym1 && sym1.getSymbol()) {
+                                var className = getClassName(sym1.getSymbol());
+                                if (className === '__object') {
+                                    className = sym.getName();
+                                }
+                                results.add(className);
+                            }
+                        }
                     }
                     else {
                     }

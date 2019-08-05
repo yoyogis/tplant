@@ -32,12 +32,23 @@ if (!commander.input) {
     console.error('Missing input file');
     process.exit(1);
 }
+let matches1:Array<string> = [];
+const input:string = <string>commander.input;
+input.split(',').forEach((path1:string) => {
+    if(path1){
+        matches1 = matches1.concat(G.sync(path1));
+    }
+    
+});
 
-G(<string>commander.input, {}, (err: Error | null, matches: string[]): void => {
+run(null, matches1);
+
+
+function run(err: Error | null, matches: string[]): void{
     if (err !== null) {
         throw err;
     }
-
+    console.log(commander.input);
     const tsConfigFile: string | undefined = findTsConfigFile(<string>commander.input, <string | undefined>commander.tsconfig);
 
     const plantUMLDocument: string = tplant.convertToPlant(
@@ -65,7 +76,7 @@ G(<string>commander.input, {}, (err: Error | null, matches: string[]): void => {
 
     // tslint:disable-next-line non-literal-fs-path
     fs.writeFileSync(<string>commander.output, plantUMLDocument, 'binary');
-});
+};
 
 function findTsConfigFile(inputPath: string, tsConfigPath?: string): string | undefined {
     if (tsConfigPath !== undefined) {

@@ -28,10 +28,19 @@ if (!commander_1.default.input) {
     console.error('Missing input file');
     process.exit(1);
 }
-glob_1.default(commander_1.default.input, {}, function (err, matches) {
+var matches1 = [];
+var input = commander_1.default.input;
+input.split(',').forEach(function (path1) {
+    if (path1) {
+        matches1 = matches1.concat(glob_1.default.sync(path1));
+    }
+});
+run(null, matches1);
+function run(err, matches) {
     if (err !== null) {
         throw err;
     }
+    console.log(commander_1.default.input);
     var tsConfigFile = findTsConfigFile(commander_1.default.input, commander_1.default.tsconfig);
     var plantUMLDocument = tplant_1.tplant.convertToPlant(tplant_1.tplant.generateDocumentation(matches.filter(function (m) { return m.indexOf('node_modules') === -1; }), getCompilerOptions(tsConfigFile)), {
         compositions: commander_1.default.compositions,
@@ -48,7 +57,8 @@ glob_1.default(commander_1.default.input, {}, function (err, matches) {
         return;
     }
     fs_1.default.writeFileSync(commander_1.default.output, plantUMLDocument, 'binary');
-});
+}
+;
 function findTsConfigFile(inputPath, tsConfigPath) {
     if (tsConfigPath !== undefined) {
         var tsConfigStats = fs_1.default.statSync(tsConfigPath);
